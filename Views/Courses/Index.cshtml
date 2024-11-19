@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<Group8_BrarPena.Models.Course>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Courses";
 }
 
-<h1>Index</h1>
+<h1>Courses</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -12,6 +12,9 @@
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CourseId)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.CourseCode)
             </th>
@@ -29,7 +32,10 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
-        <tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CourseId)
+                </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CourseCode)
             </td>
