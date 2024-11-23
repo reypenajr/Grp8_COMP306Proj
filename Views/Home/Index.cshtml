@@ -1,8 +1,51 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<Group8_BrarPena.Models.Course>
+
+@{
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h1>Search for Course</h1>
+
+<!-- Search Form -->
+<form action="/Home/Index" method="get" class="mb-4">
+    <div class="mb-3">
+        <label for="course" class="form-label">Enter course name or code:</label>
+        <input type="text" id="course" name="course" class="form-control" placeholder="Search courses..." required>
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+<!-- Courses Table -->
+<h2>Courses</h2>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.First().CourseId)</th>
+                <th>@Html.DisplayNameFor(model => model.First().CourseCode)</th>
+                <th>@Html.DisplayNameFor(model => model.First().CourseYearSem)</th>
+                <th>@Html.DisplayNameFor(model => model.First().Term)</th>
+                <th>@Html.DisplayNameFor(model => model.First().ProgramCode)</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.CourseId</td>
+                    <td>@item.CourseCode</td>
+                    <td>@item.CourseYearSem</td>
+                    <td>@item.Term</td>
+                    <td>@item.ProgramCode</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No courses found.</p>
+}
