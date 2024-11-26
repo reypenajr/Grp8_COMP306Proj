@@ -14,25 +14,25 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ReviewId" />
 
-            <!-- ReviewerName -->
             <div class="form-group">
                 <label asp-for="ReviewerName" class="control-label"></label>
-                <input asp-for="ReviewerName" class="form-control" />
+                <input asp-for="ReviewerName" class="form-control" readonly />
                 <span asp-validation-for="ReviewerName" class="text-danger"></span>
             </div>
-
-            <!-- Rating -->
             <div class="form-group">
                 <label asp-for="Rating" class="control-label"></label>
                 <input asp-for="Rating" class="form-control" />
                 <span asp-validation-for="Rating" class="text-danger"></span>
             </div>
-
-            <!-- Body -->
             <div class="form-group">
                 <label asp-for="Body" class="control-label"></label>
-                <textarea asp-for="Body" class="form-control"></textarea>
+                <input asp-for="Body" class="form-control" />
                 <span asp-validation-for="Body" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CourseId" class="control-label"></label>
+                <input asp-for="CourseId" class="form-control" readonly />
+                <span asp-validation-for="CourseId" class="text-danger"></span>
             </div>
 
             <div class="form-group">
@@ -43,7 +43,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="Home" asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

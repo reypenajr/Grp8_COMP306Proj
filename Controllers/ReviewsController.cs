@@ -81,10 +81,19 @@ namespace Group8_BrarPena.Controllers
         }
 
 
-        // GET: Reviews/Create
-        public IActionResult Create()
+        [HttpGet]
+        public IActionResult Create(string courseId)
         {
-            return View();
+            // Get the logged-in user's email from the authentication context
+            var userEmail = User.Identity.Name; // This assumes the email is stored as the username in your authentication system
+
+            var review = new Review
+            {
+                ReviewerName = userEmail, // Autofill ReviewerName with the logged-in user's email
+                CourseId = courseId
+            };
+
+            return View(review);
         }
 
         // POST: Reviews/Create
@@ -102,8 +111,8 @@ namespace Group8_BrarPena.Controllers
 
                 var reviewDocument = new Document
                 {
-                    ["ReviewId"] = review.ReviewId, 
-                    ["CreatedDate"] = review.CreatedDate?.ToString("o") ?? string.Empty, 
+                    ["ReviewId"] = review.ReviewId,
+                    ["CreatedDate"] = review.CreatedDate?.ToString("o") ?? string.Empty,
                     ["UpdatedDate"] = review.UpdatedDate?.ToString("o") ?? string.Empty,
                     ["ReviewerName"] = review.ReviewerName,
                     ["Rating"] = review.Rating,
@@ -113,7 +122,7 @@ namespace Group8_BrarPena.Controllers
 
                 await _reviewsTable.PutItemAsync(reviewDocument);
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Home");
             }
 
             return View(review);
@@ -144,7 +153,7 @@ namespace Group8_BrarPena.Controllers
                     ReviewerName = document["ReviewerName"]?.AsString(),
                     Rating = int.TryParse(document["Rating"]?.ToString(), out var rating) ? rating : 0,
                     Body = document["Body"]?.AsString(),
-                    CourseId = document["CourseId"]?.AsString()
+                    CourseId = document["CourseId"]?.AsString() // Make sure to include CourseId here
                 };
 
                 return View(review);
@@ -154,22 +163,19 @@ namespace Group8_BrarPena.Controllers
                 Console.WriteLine($"DynamoDB Error: {ex.Message}");
                 return StatusCode(500, "Internal server error.");
             }
-
         }
 
-
         // POST: Reviews/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ReviewId,ReviewerName,Rating,Body")] Review review)
+        public async Task<IActionResult> Edit(int id, [Bind("ReviewId,ReviewerName,Rating,Body,CourseId")] Review review)
         {
             if (id != review.ReviewId)
             {
                 return NotFound();
             }
 
-            review.UpdatedDate = DateTime.UtcNow; 
+            review.UpdatedDate = DateTime.UtcNow;
 
             if (ModelState.IsValid)
             {
@@ -177,7 +183,7 @@ namespace Group8_BrarPena.Controllers
                 {
                     var updateRequest = new UpdateItemRequest
                     {
-                        TableName = "Reviews", 
+                        TableName = "Reviews",
                         Key = new Dictionary<string, AttributeValue>
                 {
                     { "ReviewId", new AttributeValue { N = review.ReviewId.ToString() } }
@@ -187,6 +193,7 @@ namespace Group8_BrarPena.Controllers
                     { "#ReviewerName", "ReviewerName" },
                     { "#Rating", "Rating" },
                     { "#Body", "Body" },
+                    { "#CourseId", "CourseId" },  // Add CourseId to the update expression
                     { "#UpdatedDate", "UpdatedDate" }
                 },
                         ExpressionAttributeValues = new Dictionary<string, AttributeValue>
@@ -194,15 +201,16 @@ namespace Group8_BrarPena.Controllers
                     { ":reviewerName", new AttributeValue { S = review.ReviewerName } },
                     { ":rating", new AttributeValue { N = review.Rating.ToString() } },
                     { ":body", new AttributeValue { S = review.Body } },
-                    { ":updatedDate", new AttributeValue { S = review.UpdatedDate.Value.ToString("o") } } 
+                    { ":courseId", new AttributeValue { S = review.CourseId } },  // Ensure CourseId is updated
+                    { ":updatedDate", new AttributeValue { S = review.UpdatedDate.Value.ToString("o") } }
                 },
-                        UpdateExpression = "SET #ReviewerName = :reviewerName, #Rating = :rating, #Body = :body, #UpdatedDate = :updatedDate"
+                        UpdateExpression = "SET #ReviewerName = :reviewerName, #Rating = :rating, #Body = :body, #CourseId = :courseId, #UpdatedDate = :updatedDate"
                     };
 
                     await _dynamoDbClient.UpdateItemAsync(updateRequest);
 
                     Console.WriteLine($"Updated review with ID: {review.ReviewId}");
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction("Index", "Home");
                 }
                 catch (AmazonDynamoDBException ex)
                 {
@@ -213,7 +221,6 @@ namespace Group8_BrarPena.Controllers
 
             return View(review);
         }
-
 
 
 
@@ -261,7 +268,7 @@ namespace Group8_BrarPena.Controllers
 
                 await _reviewsTable.DeleteItemAsync(hashKeyValue);
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Home");
             }
             catch (AmazonDynamoDBException ex)
             {
@@ -269,9 +276,6 @@ namespace Group8_BrarPena.Controllers
                 return StatusCode(500, "Internal server error.");
             }
         }
-
-
-
 
 
     }
