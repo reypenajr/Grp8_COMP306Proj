@@ -62,27 +62,65 @@ namespace Group8_BrarPena.Controllers
         //    return View(course);
         //}
 
-        // GET: Courses/Create
-        //public IActionResult Create()
-        //{
-        //    return View();
-        //}
+        //GET: Courses/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
 
-        // POST: Courses/Create
+        //POST: Courses/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("CourseId,CourseCode,CourseYearSem,Term,ProgramCode")] Course course)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        _context.Add(course);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(course);
-        //}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Course model)
+        {
+            Console.WriteLine("Entered Create POST method for Course");
+
+            if (model == null)
+            {
+                ModelState.AddModelError("", "No data was received. Please try again.");
+                return View(model);
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var courseDocument = new Document
+                    {
+                        ["CourseId"] = model.CourseId,
+                        ["CourseCode"] = model.CourseCode,
+                        ["CourseYearSem"] = model.CourseYearSem,
+                        ["ProgramCode"] = model.ProgramCode,
+                        ["Term"] = model.Term
+                    };
+
+                    Console.WriteLine("Inserting course document into DynamoDB...");
+                    await _coursesTable.PutItemAsync(courseDocument);
+                    Console.WriteLine("Course document inserted successfully.");
+
+                    TempData["SuccessMessage"] = "Course created successfully!";
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error during course creation: {ex.Message}");
+                    ModelState.AddModelError("", $"Error creating course: {ex.Message}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Model state is invalid");
+                foreach (var error in ModelState)
+                {
+                    Console.WriteLine($"Key: {error.Key}, Errors: {string.Join(", ", error.Value.Errors.Select(e => e.ErrorMessage))}");
+                }
+            }
+
+            return View(model);
+        }
+
 
         // GET: Courses/Edit/5
         //public async Task<IActionResult> Edit(int? id)
