@@ -45,22 +45,43 @@ namespace Group8_BrarPena.Controllers
         }
 
         // GET: Courses/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
+        public async Task<IActionResult> Details(string id)
+        {
+            Console.WriteLine($"Fetching details for CourseId: {id}");
 
-        //    var course = await _context.Course
-        //        .FirstOrDefaultAsync(m => m.CourseId == id);
-        //    if (course == null)
-        //    {
-        //        return NotFound();
-        //    }
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound("CourseId is required.");
+            }
 
-        //    return View(course);
-        //}
+            try
+            {
+                var document = await _coursesTable.GetItemAsync(id);
+
+                if (document == null)
+                {
+                    Console.WriteLine("Course not found in DynamoDB.");
+                    return NotFound("Course not found.");
+                }
+
+                var course = new Course
+                {
+                    CourseId = document["CourseId"],
+                    CourseCode = document["CourseCode"],
+                    CourseYearSem = document["CourseYearSem"],
+                    ProgramCode = document["ProgramCode"],
+                    Term = document["Term"]
+                };
+
+                return View(course);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching course details: {ex.Message}");
+                return BadRequest("An error occurred while fetching course details. Please try again.");
+            }
+        }
+
 
         //GET: Courses/Create
         public IActionResult Create()

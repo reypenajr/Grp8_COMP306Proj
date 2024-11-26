@@ -6,37 +6,35 @@
 
 <h1>Details</h1>
 
-<div>
-    <h4>Course</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CourseCode)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CourseCode)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CourseYearSem)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CourseYearSem)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Term)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Term)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ProgramCode)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProgramCode)
-        </dd>
-    </dl>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; flex-direction: row;">
+                    <div style="width: 30%; font-weight: bold;">Course ID</div>
+                    <div>@Model.CourseId</div>
+                </div>
+                <div style="display: flex; flex-direction: row;">
+                    <div style="width: 30%; font-weight: bold;">Course Code</div>
+                    <div>@Model.CourseCode</div>
+                </div>
+                <div style="display: flex; flex-direction: row;">
+                    <div style="width: 30%; font-weight: bold;">Course Year & Semester</div>
+                    <div>@Model.CourseYearSem</div>
+                </div>
+                <div style="display: flex; flex-direction: row;">
+                    <div style="width: 30%; font-weight: bold;">Program Code</div>
+                    <div>@Model.ProgramCode</div>
+                </div>
+                <div style="display: flex; flex-direction: row;">
+                    <div style="width: 30%; font-weight: bold;">Term</div>
+                    <div>@Model.Term</div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.CourseId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @* <a asp-action="Edit" asp-route-id="@Model?.CourseId">Edit</a> | *@
+    <a asp-controller="Home" asp-action="Index">Back to List</a>
 </div>
