@@ -1,4 +1,5 @@
-﻿namespace Group8_BrarPena.Models
+﻿
+namespace Group8_BrarPena.Models
 {
     public class Course
     {
