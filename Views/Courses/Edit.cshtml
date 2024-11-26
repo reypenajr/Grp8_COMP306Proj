@@ -10,32 +10,42 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="CourseId" />
+        <form asp-action="Edit" method="post">
+            @Html.AntiForgeryToken()
+
             <div class="form-group">
-                <label asp-for="CourseCode" class="control-label"></label>
-                <input asp-for="CourseCode" class="form-control" />
+                <label asp-for="CourseId">Course ID</label>
+                <input asp-for="CourseId" class="form-control" readonly />
+                <span asp-validation-for="CourseId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CourseCode">Course Code</label>
+                <input asp-for="CourseCode" class="form-control" placeholder="e.g., COMP123" />
                 <span asp-validation-for="CourseCode" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="CourseYearSem" class="control-label"></label>
-                <input asp-for="CourseYearSem" class="form-control" />
+                <label asp-for="CourseYearSem">Course Year & Semester</label>
+                <input asp-for="CourseYearSem" class="form-control" placeholder="e.g., SY1S1" />
+                <small class="form-text text-muted">Format: SY (School Year) followed by S (Semester). Example: SY1S1</small>
                 <span asp-validation-for="CourseYearSem" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="Term" class="control-label"></label>
-                <input asp-for="Term" class="form-control" />
-                <span asp-validation-for="Term" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ProgramCode" class="control-label"></label>
-                <input asp-for="ProgramCode" class="form-control" />
+                <label asp-for="ProgramCode">Program Code</label>
+                <input asp-for="ProgramCode" class="form-control" placeholder="e.g., 3409" />
                 <span asp-validation-for="ProgramCode" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <label asp-for="Term">Term</label>
+                <input asp-for="Term" class="form-control" placeholder="e.g., F23" />
+                <small class="form-text text-muted">Format: F for Fall, W for Winter, S for Summer, followed by the last two digits of the year. Example: F23</small>
+                <span asp-validation-for="Term" class="text-danger"></span>
             </div>
+
+            <button type="submit" class="btn btn-primary">Save Changes</button>
         </form>
     </div>
 </div>

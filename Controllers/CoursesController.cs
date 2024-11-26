@@ -142,57 +142,70 @@ namespace Group8_BrarPena.Controllers
             return View(model);
         }
 
-
         // GET: Courses/Edit/5
-        //public async Task<IActionResult> Edit(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
+        public async Task<IActionResult> Edit(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-        //    var course = await _context.Course.FindAsync(id);
-        //    if (course == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return View(course);
-        //}
+            var document = await _coursesTable.GetItemAsync(id);
+            if (document == null)
+            {
+                return NotFound();
+            }
+
+            var course = new Course
+            {
+                CourseId = document["CourseId"],
+                CourseCode = document["CourseCode"],
+                CourseYearSem = document["CourseYearSem"],
+                ProgramCode = document["ProgramCode"],
+                Term = document["Term"]
+            };
+
+            return View(course);
+        }
 
         // POST: Courses/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, [Bind("CourseId,CourseCode,CourseYearSem,Term,ProgramCode")] Course course)
-        //{
-        //    if (id != course.CourseId)
-        //    {
-        //        return NotFound();
-        //    }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(string id, Course course)
+        {
+            if (id != course.CourseId)
+            {
+                return NotFound();
+            }
 
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            _context.Update(course);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!CourseExists(course.CourseId))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(course);
-        //}
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var courseDocument = new Document
+                    {
+                        ["CourseId"] = course.CourseId,
+                        ["CourseCode"] = course.CourseCode,
+                        ["CourseYearSem"] = course.CourseYearSem,
+                        ["ProgramCode"] = course.ProgramCode,
+                        ["Term"] = course.Term
+                    };
+
+                    await _coursesTable.PutItemAsync(courseDocument);
+
+                    TempData["SuccessMessage"] = "Course updated successfully!";
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", $"Error updating course: {ex.Message}");
+                }
+            }
+
+            return View(course);
+        }
 
         // GET: Courses/Delete/5
         //public async Task<IActionResult> Delete(int? id)
