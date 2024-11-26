@@ -22,38 +22,44 @@ namespace Group8_BrarPena.Controllers
             _coursesTable = Table.LoadTable(_dynamoDbClient, "Courses");
         }
 
-        //// GET: Home/Index
-        //public async Task<IActionResult> Index(string? course)
-        //{
-        //    var scanFilter = new ScanFilter();
-        //    if (!string.IsNullOrEmpty(course))
-        //    {
-        //        scanFilter.AddCondition("CourseCode", ScanOperator.Contains, course);
-        //    }
-
-        //    var search = _coursesTable.Scan(scanFilter);
-        //    var documents = await search.GetNextSetAsync();
-
-        //    var courses = documents.Select(doc => new Course
-        //    {
-        //        CourseId = doc["CourseId"],
-        //        CourseCode = doc["CourseCode"],
-        //        CourseYearSem = doc["CourseYearSem"],
-        //        ProgramCode = doc["ProgramCode"],
-        //        Term = doc["Term"]
-        //    }).ToList();
-
-        //    return View(courses);
-        //}
-
-        public IActionResult Index()
+        // GET: Home/Index
+        public async Task<IActionResult> Index(string? course)
         {
+
             if (!User.Identity.IsAuthenticated)
             {
                 return Redirect("~/Identity/Account/Login");
             }
-            return View();
+
+            var scanFilter = new ScanFilter();
+            if (!string.IsNullOrEmpty(course))
+            {
+                scanFilter.AddCondition("CourseCode", ScanOperator.Contains, course);
+            }
+
+            var search = _coursesTable.Scan(scanFilter);
+            var documents = await search.GetNextSetAsync();
+
+            var courses = documents.Select(doc => new Course
+            {
+                CourseId = doc["CourseId"],
+                CourseCode = doc["CourseCode"],
+                CourseYearSem = doc["CourseYearSem"],
+                ProgramCode = doc["ProgramCode"],
+                Term = doc["Term"]
+            }).ToList();
+
+            return View(courses);
         }
+
+        //public IActionResult Index()
+        //{
+        //    if (!User.Identity.IsAuthenticated)
+        //    {
+        //        return Redirect("~/Identity/Account/Login");
+        //    }
+        //    return View();
+        //}
 
 
         public IActionResult Privacy()
