@@ -10,6 +10,7 @@ using Group8_BrarPena.Models;
 using Microsoft.AspNetCore.Authorization;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DocumentModel;
+using Group8_BrarPena.ViewModels;
 
 namespace Group8_BrarPena.Controllers
 {
@@ -19,12 +20,14 @@ namespace Group8_BrarPena.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IAmazonDynamoDB _dynamoDbClient;
         private readonly Table _coursesTable;
+        private readonly Table _reviewsTable;
 
         public CoursesController(ApplicationDbContext context, IAmazonDynamoDB dynamoDbClient)
         {
             _context = context;
             _dynamoDbClient = dynamoDbClient;
             _coursesTable = Table.LoadTable(_dynamoDbClient, "Courses");
+            _reviewsTable = Table.LoadTable(_dynamoDbClient, "Reviews");
         }
 
         // GET: Courses
@@ -73,7 +76,30 @@ namespace Group8_BrarPena.Controllers
                     Term = document["Term"]
                 };
 
-                return View(course);
+                //Fetching reviews here (please edit as needed)--------------------------------------------------------------------------
+                var scanFilter = new ScanFilter();
+                scanFilter.AddCondition("CourseId", ScanOperator.Equal, id);
+                var search = _reviewsTable.Scan(scanFilter);
+                var reviewDocuments = await search.GetNextSetAsync();
+
+                var reviews = reviewDocuments.Select(r => new Review
+                {
+                    ReviewId = Convert.ToInt32(r["ReviewId"]),
+                    CreatedDate = DateTime.TryParse(r["CreatedDate"], out var createdDate) ? createdDate : null,
+                    UpdatedDate = DateTime.TryParse(r["UpdatedDate"], out var updatedDate) ? updatedDate : null,
+                    ReviewerName = r["ReviewerName"],
+                    Rating = Convert.ToInt32(r["Rating"]),
+                    Body = r["Body"],
+                    CourseId = r["CourseId"]
+                }).ToList();
+
+                var viewModel = new CourseDetailsViewModel
+                {
+                    Course = course,
+                    Reviews = reviews
+                };
+
+                return View(viewModel);
             }
             catch (Exception ex)
             {
@@ -81,7 +107,6 @@ namespace Group8_BrarPena.Controllers
                 return BadRequest("An error occurred while fetching course details. Please try again.");
             }
         }
-
 
         //GET: Courses/Create
         public IActionResult Create()
