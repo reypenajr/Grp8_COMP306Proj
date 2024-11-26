@@ -208,41 +208,57 @@ namespace Group8_BrarPena.Controllers
         }
 
         // GET: Courses/Delete/5
-        //public async Task<IActionResult> Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
+        public async Task<IActionResult> Delete(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-        //    var course = await _context.Course
-        //        .FirstOrDefaultAsync(m => m.CourseId == id);
-        //    if (course == null)
-        //    {
-        //        return NotFound();
-        //    }
+            var document = await _coursesTable.GetItemAsync(id);
+            if (document == null)
+            {
+                return NotFound();
+            }
 
-        //    return View(course);
-        //}
+            var course = new Course
+            {
+                CourseId = document["CourseId"],
+                CourseCode = document["CourseCode"],
+                CourseYearSem = document["CourseYearSem"],
+                ProgramCode = document["ProgramCode"],
+                Term = document["Term"]
+            };
+
+            return View(course);
+        }
 
         // POST: Courses/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> DeleteConfirmed(int id)
-        //{
-        //    var course = await _context.Course.FindAsync(id);
-        //    if (course != null)
-        //    {
-        //        _context.Course.Remove(course);
-        //    }
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(string id)
+        {
+            try
+            {
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-        //    await _context.SaveChangesAsync();
-        //    return RedirectToAction(nameof(Index));
-        //}
+                Console.WriteLine($"Deleting CourseId: {id}");
+                await _coursesTable.DeleteItemAsync(id);
+                Console.WriteLine("Course deleted successfully.");
 
-        //private bool CourseExists(int id)
-        //{
-        //    return _context.Course.Any(e => e.CourseId == id);
-        //}
+                TempData["SuccessMessage"] = "Course deleted successfully!";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting course: {ex.Message}");
+                ModelState.AddModelError("", $"Error deleting course: {ex.Message}");
+                return RedirectToAction(nameof(Delete), new { id });
+            }
+        }
+
     }
 }
