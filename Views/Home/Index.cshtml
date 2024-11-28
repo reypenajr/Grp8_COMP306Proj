@@ -21,6 +21,40 @@
     </div>
 </form>
 
+<!-- Advanced Search Form -->
+<div class="mb-4">
+    <button type="button" class="btn btn-link p-0" data-bs-toggle="collapse" data-bs-target="#advancedSearch" aria-expanded="false" aria-controls="advancedSearch">
+        Search With Filters
+    </button>
+    <div class="collapse mt-3" id="advancedSearch">
+        <div class="card p-4">
+            <form action="/Home/AdvancedSearch" method="get">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label for="courseCode" class="form-label">Course Code</label>
+                        <input type="text" id="courseCode" name="courseCode" class="form-control" placeholder="Enter course code...">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="programCode" class="form-label">Program Code</label>
+                        <input type="text" id="programCode" name="programCode" class="form-control" placeholder="Enter program code...">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="term" class="form-label">Term</label>
+                        <input type="text" id="term" name="term" class="form-control" placeholder="Enter term...">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="courseYearSem" class="form-label">Course Year & Semester</label>
+                        <input type="text" id="courseYearSem" name="courseYearSem" class="form-control" placeholder="Enter year & semester...">
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-primary">Apply Filters</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <!-- Courses Table -->
 <h2>Courses</h2>
 
