@@ -28,6 +28,12 @@ namespace Group8_BrarPena.Controllers
         // GET: Home/Index
         public async Task<IActionResult> Index(string? course, string sortColumn, string sortOrder)
         {
+
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Redirect("~/Identity/Account/Login");
+            }
+
             var scanFilter = new ScanFilter();
             if (!string.IsNullOrEmpty(course))
             {

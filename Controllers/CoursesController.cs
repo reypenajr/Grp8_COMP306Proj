@@ -47,6 +47,67 @@ namespace Group8_BrarPena.Controllers
             return View(courses);
         }
 
+        //// GET: Courses/Details/5
+        //public async Task<IActionResult> Details(string id)
+        //{
+        //    Console.WriteLine($"Fetching details for CourseId: {id}");
+
+        //    if (string.IsNullOrEmpty(id))
+        //    {
+        //        return NotFound("CourseId is required.");
+        //    }
+
+        //    try
+        //    {
+        //        var document = await _coursesTable.GetItemAsync(id);
+
+        //        if (document == null)
+        //        {
+        //            Console.WriteLine("Course not found in DynamoDB.");
+        //            return NotFound("Course not found.");
+        //        }
+
+        //        var course = new Course
+        //        {
+        //            CourseId = document["CourseId"],
+        //            CourseCode = document["CourseCode"],
+        //            CourseYearSem = document["CourseYearSem"],
+        //            ProgramCode = document["ProgramCode"],
+        //            Term = document["Term"]
+        //        };
+
+        //        //Fetching reviews here (please edit as needed)--------------------------------------------------------------------------
+        //        var scanFilter = new ScanFilter();
+        //        scanFilter.AddCondition("CourseId", ScanOperator.Equal, id);
+        //        var search = _reviewsTable.Scan(scanFilter);
+        //        var reviewDocuments = await search.GetNextSetAsync();
+
+        //        var reviews = reviewDocuments.Select(r => new Review
+        //        {
+        //            ReviewId = Convert.ToInt32(r["ReviewId"]),
+        //            CreatedDate = DateTime.TryParse(r["CreatedDate"], out var createdDate) ? createdDate : null,
+        //            UpdatedDate = DateTime.TryParse(r["UpdatedDate"], out var updatedDate) ? updatedDate : null,
+        //            ReviewerName = r["ReviewerName"],
+        //            Rating = Convert.ToInt32(r["Rating"]),
+        //            Body = r["Body"],
+        //            CourseId = r["CourseId"]
+        //        }).ToList();
+
+        //        var viewModel = new CourseDetailsViewModel
+        //        {
+        //            Course = course,
+        //            Reviews = reviews
+        //        };
+
+        //        return View(viewModel);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"Error fetching course details: {ex.Message}");
+        //        return BadRequest("An error occurred while fetching course details. Please try again.");
+        //    }
+        //}
+
         // GET: Courses/Details/5
         public async Task<IActionResult> Details(string id)
         {
@@ -59,6 +120,7 @@ namespace Group8_BrarPena.Controllers
 
             try
             {
+                // Fetching the course details
                 var document = await _coursesTable.GetItemAsync(id);
 
                 if (document == null)
@@ -76,7 +138,7 @@ namespace Group8_BrarPena.Controllers
                     Term = document["Term"]
                 };
 
-                //Fetching reviews here (please edit as needed)--------------------------------------------------------------------------
+                // Fetching reviews for this specific course
                 var scanFilter = new ScanFilter();
                 scanFilter.AddCondition("CourseId", ScanOperator.Equal, id);
                 var search = _reviewsTable.Scan(scanFilter);
@@ -93,6 +155,7 @@ namespace Group8_BrarPena.Controllers
                     CourseId = r["CourseId"]
                 }).ToList();
 
+                // Combine course and reviews into a ViewModel
                 var viewModel = new CourseDetailsViewModel
                 {
                     Course = course,
@@ -107,6 +170,7 @@ namespace Group8_BrarPena.Controllers
                 return BadRequest("An error occurred while fetching course details. Please try again.");
             }
         }
+
 
         //GET: Courses/Create
         public IActionResult Create()

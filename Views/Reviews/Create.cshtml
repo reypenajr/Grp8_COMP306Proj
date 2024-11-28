@@ -13,18 +13,8 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="CreatedDate" class="control-label"></label>
-                <input asp-for="CreatedDate" class="form-control" />
-                <span asp-validation-for="CreatedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UpdatedDate" class="control-label"></label>
-                <input asp-for="UpdatedDate" class="form-control" />
-                <span asp-validation-for="UpdatedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="ReviewerName" class="control-label"></label>
-                <input asp-for="ReviewerName" class="form-control" />
+                <input asp-for="ReviewerName" class="form-control" readonly />
                 <span asp-validation-for="ReviewerName" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -39,7 +29,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="CourseId" class="control-label"></label>
-                <input asp-for="CourseId" class="form-control" />
+                <input asp-for="CourseId" class="form-control" readonly />
                 <span asp-validation-for="CourseId" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -50,7 +40,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="Home" asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
