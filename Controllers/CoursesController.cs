@@ -211,7 +211,7 @@ namespace Group8_BrarPena.Controllers
                     Console.WriteLine("Course document inserted successfully.");
 
                     TempData["SuccessMessage"] = "Course created successfully!";
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index", "Home");
                 }
                 catch (Exception ex)
                 {
