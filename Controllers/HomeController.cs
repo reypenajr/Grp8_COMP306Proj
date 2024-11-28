@@ -5,6 +5,7 @@ using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DocumentModel;
 using Group8_BrarPena.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 
 namespace Group8_BrarPena.Controllers
@@ -23,7 +24,7 @@ namespace Group8_BrarPena.Controllers
         }
 
         // GET: Home/Index
-        public async Task<IActionResult> Index(string? course)
+        public async Task<IActionResult> Index(string? course, string sortColumn, string sortOrder)
         {
             var scanFilter = new ScanFilter();
             if (!string.IsNullOrEmpty(course))
@@ -42,6 +43,29 @@ namespace Group8_BrarPena.Controllers
                 ProgramCode = doc["ProgramCode"],
                 Term = doc["Term"]
             }).ToList();
+
+            switch (sortColumn)
+            {
+                case "CourseCode":
+                    courses = sortOrder == "asc" ? courses.OrderBy(c => c.CourseCode).ToList() : courses.OrderByDescending(c => c.CourseCode).ToList();
+                    break;
+                case "CourseYearSem":
+                    courses = sortOrder == "asc" ? courses.OrderBy(c => c.CourseYearSem).ToList() : courses.OrderByDescending(c => c.CourseYearSem).ToList();
+                    break;
+                case "Term":
+                    courses = sortOrder == "asc" ? courses.OrderBy(c => c.Term).ToList() : courses.OrderByDescending(c => c.Term).ToList();
+                    break;
+                case "ProgramCode":
+                    courses = sortOrder == "asc" ? courses.OrderBy(c => c.ProgramCode).ToList() : courses.OrderByDescending(c => c.ProgramCode).ToList();
+                    break;
+                default:
+                    courses = sortOrder == "asc" ? courses.OrderBy(c => c.CourseId).ToList() : courses.OrderByDescending(c => c.CourseId).ToList();
+                    break;
+            }
+
+            ViewData["CurrentSortColumn"] = sortColumn;
+            ViewData["CurrentSortOrder"] = sortOrder;
+            ViewData["CurrentSearchQuery"] = course;
 
             return View(courses);
         }
