@@ -122,7 +122,7 @@ namespace Group8_BrarPena.Controllers
 
                 await _reviewsTable.PutItemAsync(reviewDocument);
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Details", "Courses", new { id = review.CourseId });
             }
 
             return View(review);
@@ -210,7 +210,7 @@ namespace Group8_BrarPena.Controllers
                     await _dynamoDbClient.UpdateItemAsync(updateRequest);
 
                     Console.WriteLine($"Updated review with ID: {review.ReviewId}");
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Details", "Courses", new { id = review.CourseId });
                 }
                 catch (AmazonDynamoDBException ex)
                 {
@@ -266,9 +266,13 @@ namespace Group8_BrarPena.Controllers
             {
                 var hashKeyValue = id;
 
+                var document = await _reviewsTable.GetItemAsync(id);
+
+                var courseId = document["CourseId"]?.AsString();
+
                 await _reviewsTable.DeleteItemAsync(hashKeyValue);
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Details", "Courses", new { id = courseId });
             }
             catch (AmazonDynamoDBException ex)
             {
