@@ -13,46 +13,46 @@
         <form asp-action="Create" method="post">
             @Html.AntiForgeryToken()
 
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="CourseId">Course ID</label>
                 <input asp-for="CourseId" class="form-control" placeholder="e.g., COMP123SY1S1F23" />
                 <span asp-validation-for="CourseId" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="CourseCode">Course Code</label>
                 <input asp-for="CourseCode" class="form-control" placeholder="e.g., COMP123" />
                 <span asp-validation-for="CourseCode" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="CourseYearSem">Course Year & Semester</label>
                 <input asp-for="CourseYearSem" class="form-control" placeholder="e.g., SY1S1" />
                 <small class="form-text text-muted">Format: SY (School Year) followed by S (Semester). Example: SY1S1</small>
                 <span asp-validation-for="CourseYearSem" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="ProgramCode">Program Code</label>
                 <input asp-for="ProgramCode" class="form-control" placeholder="e.g., 3409" />
                 <span asp-validation-for="ProgramCode" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="Term">Term</label>
                 <input asp-for="Term" class="form-control" placeholder="e.g., F23" />
                 <small class="form-text text-muted">Format: F for Fall, W for Winter, S for Summer, followed by the last two digits of the year. Example: F23</small>
                 <span asp-validation-for="Term" class="text-danger"></span>
             </div>
 
-            <button type="submit" class="btn btn-primary">Create Course</button>
+            <button type="submit" class="btn btn-primary mt-1 mb-3">Create Course</button>
         </form>
 
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="Home" asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

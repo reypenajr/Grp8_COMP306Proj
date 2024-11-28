@@ -13,32 +13,32 @@
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="CourseId" />
 
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="CourseId">Course ID</label>
                 <input asp-for="CourseId" class="form-control" readonly />
             </div>
 
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="CourseCode">Course Code</label>
                 <input asp-for="CourseCode" class="form-control" readonly />
             </div>
 
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="CourseYearSem">Course Year & Semester</label>
                 <input asp-for="CourseYearSem" class="form-control" readonly />
             </div>
 
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="ProgramCode">Program Code</label>
                 <input asp-for="ProgramCode" class="form-control" readonly />
             </div>
 
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="Term">Term</label>
                 <input asp-for="Term" class="form-control" readonly />
             </div>
 
-            <button type="submit" class="btn btn-danger">Delete</button>
+            <button type="submit" class="btn btn-danger mt-1 mb-3">Delete</button>
             <a asp-action="Index" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
